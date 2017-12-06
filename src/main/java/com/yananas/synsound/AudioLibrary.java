@@ -1,22 +1,49 @@
 package com.yananas.synsound;
 
+import java.io.IOException;
+
 public class AudioLibrary {
 
-    public final static double SAMPLE_RATE = 44100.0;
+    public static double[] SIMPLE_WAVE;
+    public static double[] TWO_WAVES;
 
-    public final static byte[] SIMPLE_TONE_DATA;
     static {
-        SIMPLE_TONE_DATA = initSimpleTone();
+        initSimpleWave();
+        initTwoWaves();
     }
 
-    public static byte[] initSimpleTone() {
-        double[] samples = {};
-        // TODO: fill in samples array with simple tone raw data;
-        return AudioUtils.doubles2bytes(samples);
+    private static void initSimpleWave() {
+        double seconds = 2.0;
+        double frequency = 440.0;
+        double amplitude = 0.8;
+        SIMPLE_WAVE = new double[(int) (seconds * AudioHeader.SAMPLE_RATE)];
+        for (int sampleId = 0; sampleId < SIMPLE_WAVE.length; sampleId++) {
+            double time = sampleId / AudioHeader.SAMPLE_RATE;
+            SIMPLE_WAVE[sampleId] = amplitude * Math.sin(2 * Math.PI * frequency * time);
+        }
+    }
+
+    private static void initTwoWaves() {
+        double seconds = 2.0;
+        double f0 = 440.0;
+        double f1 = 6 * f0;
+        double amplitude0 = 0.8;
+        double amplitude1 = 0.2;
+        TWO_WAVES = new double[(int) (seconds * AudioHeader.SAMPLE_RATE)];
+        for (int sampleId = 0; sampleId < TWO_WAVES.length; sampleId++) {
+            double time = sampleId / AudioHeader.SAMPLE_RATE;
+            TWO_WAVES[sampleId] = amplitude0 * Math.sin(2 * Math.PI * f0 * time)
+                    + amplitude1 * Math.sin(2 * Math.PI * f1 * time);
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println("wav file raw data bytes number: " + SIMPLE_TONE_DATA.length);
+        try {
+            AudioUtils.save("simple_wave.wav", SIMPLE_WAVE);
+            AudioUtils.save("two_waves.wav", TWO_WAVES);
+        } catch (IllegalArgumentException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
