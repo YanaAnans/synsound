@@ -39,8 +39,9 @@ public class AudioLibrary {
 
     public static void main(String[] args) {
         try {
-            AudioUtils.plot("Simple wave", SIMPLE_WAVE);
             AudioUtils.save("simple_wave.wav", SIMPLE_WAVE);
+            double[] samples = AudioUtils.load("simple_wave.wav");
+            AudioUtils.plot("Simple wave", samples);
         } catch (IllegalArgumentException | IOException e) {
             e.printStackTrace();
         }

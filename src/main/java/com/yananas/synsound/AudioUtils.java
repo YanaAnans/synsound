@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -21,28 +22,46 @@ import org.jfree.ui.ApplicationFrame;
 
 public class AudioUtils {
 
-    public static final short MAX_SHORT = Short.MAX_VALUE;
+    public static final double DOUBLE_EPS = 1e-5;
 
+    /**
+     * Converts array of doubles into array of bytes, assuming that doubles are
+     * normalized
+     */
     public static byte[] doubles2bytes(double[] values) {
+        if (values == null) {
+            throw new IllegalArgumentException("'values' is null");
+        }
         byte[] bytes = new byte[2 * values.length];
         for (int i = 0; i < values.length; i++) {
-            short value = (short) (MAX_SHORT * values[i]);
+            // TODO: normalization
+            if (Double.isNaN(values[i])) {
+                throw new IllegalArgumentException("Double " + values[i] + " has invalid value");
+            }
+            short value = (short) (Short.MAX_VALUE * values[i]);
             bytes[2 * i + 0] = (byte) value;
             bytes[2 * i + 1] = (byte) (value >> 8);
         }
         return bytes;
     }
 
-    public static byte[] short2bytes(short value) {
-        return new byte[] { (byte) value, (byte) (value >> 8) };
-    }
-
-    public static short bytes2short(byte[] bytes) {
-        ByteBuffer buffer = ByteBuffer.allocate(2);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(bytes[0]);
-        buffer.put(bytes[1]);
-        return buffer.getShort(0);
+    /**
+     * Converts array of bytes into array of normalized doubles
+     */
+    public static double[] bytes2doubles(byte[] bytes) {
+        if (bytes == null) {
+            throw new IllegalArgumentException("'bytes' is null");
+        }
+        int samplesCount = bytes.length / 2;
+        double[] samples = new double[samplesCount];
+        for (int i = 0; i < samplesCount; i++) {
+            ByteBuffer buffer = ByteBuffer.allocate(2);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.put(bytes[2 * i]);
+            buffer.put(bytes[2 * i + 1]);
+            samples[i] = (double) buffer.getShort(0) / Short.MAX_VALUE;
+        }
+        return samples;
     }
 
     public static void save(String filename, double[] samples) throws IllegalArgumentException, IOException {
@@ -65,6 +84,30 @@ public class AudioUtils {
         }
     }
 
+    public static double[] load(String filename) {
+        if (filename == null) {
+            throw new IllegalArgumentException("'filename' is null");
+        }
+        File file = new File(filename);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File with name '" + filename + "' is not existing");
+        }
+        try {
+            AudioInputStream stream = AudioSystem.getAudioInputStream(file);
+            int allBytes = stream.available();
+            byte[] bytes = new byte[allBytes];
+            int bytesRead = stream.read(bytes);
+            if (bytesRead != allBytes) {
+                throw new IllegalArgumentException("Number of read bytes != number of all bytes");
+            }
+            return bytes2doubles(bytes);
+        } catch (UnsupportedAudioFileException e) {
+            throw new IllegalArgumentException("'" + filename + "' has wrong format", e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("'" + filename + "' couldn't be read", e);
+        }
+    }
+
     public static void plot(String title, double[] samples) throws IllegalArgumentException {
         if (samples == null) {
             throw new IllegalArgumentException("'samples' is null");
@@ -79,8 +122,8 @@ public class AudioUtils {
         }
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
-        JFreeChart chart = ChartFactory.createXYLineChart(title, "Time (s)", "Amplitude", dataset, PlotOrientation.VERTICAL,
-                false, false, false);
+        JFreeChart chart = ChartFactory.createXYLineChart(title, "Time (s)", "Amplitude", dataset,
+                PlotOrientation.VERTICAL, false, false, false);
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(560, 370));
         chartPanel.setMouseZoomable(true, false);
