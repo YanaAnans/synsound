@@ -1,6 +1,6 @@
 package com.yananas.synsound;
 
-public class AudioHeader {
+public class AudioSettings {
     // sample size in bits
     public static final int BIT_DEPTH = 16;
     // audio CD 44kHz sample rate
