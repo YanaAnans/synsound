@@ -28,7 +28,7 @@ public class AudioUtils {
      * Converts array of doubles into array of bytes, assuming that doubles are
      * normalized
      */
-    public static byte[] doubles2bytes(double[] values) {
+    public static byte[] doubles2bytes(double[] values) throws IllegalArgumentException {
         if (values == null) {
             throw new IllegalArgumentException("'values' is null");
         }
@@ -48,7 +48,7 @@ public class AudioUtils {
     /**
      * Converts array of bytes into array of normalized doubles
      */
-    public static double[] bytes2doubles(byte[] bytes) {
+    public static double[] bytes2doubles(byte[] bytes) throws IllegalArgumentException {
         if (bytes == null) {
             throw new IllegalArgumentException("'bytes' is null");
         }
