@@ -1,6 +1,8 @@
 package com.yananas.synsound;
 
-public class AudioSettings {
+public class Constants {
+    // math accuracy
+    public static final double DOUBLE_EPS = 1e-5;
     // sample size in bits
     public static final int BIT_DEPTH = 16;
     // audio CD 44kHz sample rate

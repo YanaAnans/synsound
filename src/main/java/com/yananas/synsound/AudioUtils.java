@@ -3,8 +3,6 @@ package com.yananas.synsound;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -16,53 +14,14 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeries; 
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
+import static com.yananas.synsound.TransformUtils.bytes2doubles;
+import static com.yananas.synsound.TransformUtils.doubles2bytes;
+
 public class AudioUtils {
-
-    public static final double DOUBLE_EPS = 1e-5;
-
-    /**
-     * Converts array of doubles into array of bytes, assuming that doubles are
-     * normalized
-     */
-    public static byte[] doubles2bytes(double[] values) throws IllegalArgumentException {
-        if (values == null) {
-            throw new IllegalArgumentException("'values' is null");
-        }
-        byte[] bytes = new byte[2 * values.length];
-        for (int i = 0; i < values.length; i++) {
-            // TODO: normalization
-            if (Double.isNaN(values[i])) {
-                throw new IllegalArgumentException("Double " + values[i] + " has invalid value");
-            }
-            short value = (short) (Short.MAX_VALUE * values[i]);
-            bytes[2 * i + 0] = (byte) value;
-            bytes[2 * i + 1] = (byte) (value >> 8);
-        }
-        return bytes;
-    }
-
-    /**
-     * Converts array of bytes into array of normalized doubles
-     */
-    public static double[] bytes2doubles(byte[] bytes) throws IllegalArgumentException {
-        if (bytes == null) {
-            throw new IllegalArgumentException("'bytes' is null");
-        }
-        int samplesCount = bytes.length / 2;
-        double[] samples = new double[samplesCount];
-        for (int i = 0; i < samplesCount; i++) {
-            ByteBuffer buffer = ByteBuffer.allocate(2);
-            buffer.order(ByteOrder.LITTLE_ENDIAN);
-            buffer.put(bytes[2 * i]);
-            buffer.put(bytes[2 * i + 1]);
-            samples[i] = (double) buffer.getShort(0) / Short.MAX_VALUE;
-        }
-        return samples;
-    }
 
     public static void save(String filename, double[] samples) throws IllegalArgumentException, IOException {
         if (samples == null) {
@@ -70,8 +29,8 @@ public class AudioUtils {
         }
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(doubles2bytes(samples));
-            AudioFormat format = new AudioFormat(AudioSettings.SAMPLE_RATE, AudioSettings.BIT_DEPTH,
-                    AudioSettings.CHANNELS_COUNT, AudioSettings.SIGNED, AudioSettings.BIG_ENDIAN);
+            AudioFormat format = new AudioFormat(Constants.SAMPLE_RATE, Constants.BIT_DEPTH,
+                    Constants.CHANNELS_COUNT, Constants.SIGNED, Constants.BIG_ENDIAN);
 
             AudioInputStream ais = new AudioInputStream(bais, format, samples.length);
             if (filename.endsWith(".wav") || filename.endsWith(".WAV")) {
@@ -115,7 +74,7 @@ public class AudioUtils {
         XYSeries series = new XYSeries(title);
         for (int sampleId = 0; sampleId < samples.length; sampleId++) {
             try {
-                series.add(sampleId / AudioSettings.SAMPLE_RATE, samples[sampleId]);
+                series.add(sampleId / Constants.SAMPLE_RATE, samples[sampleId]);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Not able to plot 'smaples' array");
             }
