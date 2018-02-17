@@ -17,25 +17,23 @@ public class ArrayUtils {
 	public static double[] repeat(double[] array, int times) {
 		double[] array2 = new double[array.length * times];
 		for (int i = 0; i < times; i++) {
-			for (int j = 0; j < array.length; j++) {
-				array2[array.length*i + j] = array[j];
-			}
+			System.arraycopy(array, 0, array2, array.length * i, array.length);
 		}
 		return array2;
 	}
 
 	public static double max(double[] array) {
 		double max = 0;
-		for (int i = 0; i < array.length; i++) {
-			max = (max > array[i]) ? max : array[i];
+		for (double anArray : array) {
+			max = (max > anArray) ? max : anArray;
 		}
 		return max;
 	}
 
 	public static double min(double[] array) {
 		double min = Double.MAX_VALUE;
-		for (int i = 0; i < array.length; i++) {
-			min = (min < array[i]) ? min : array[i];
+		for (double anArray : array) {
+			min = (min < anArray) ? min : anArray;
 		}
 		return min;
 	}
