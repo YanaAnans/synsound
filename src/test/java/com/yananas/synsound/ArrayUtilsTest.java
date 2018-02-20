@@ -1,12 +1,3 @@
-/***************
- * BEGIN-STANDARD-COPYRIGHT      ***************
- * <p>
- * Copyright (c) 2009-2018, Spirent Communications.
- * <p>
- * All rights reserved. Proprietary and confidential information of Spirent Communications.
- * <p>
- * **************        END-STANDARD-COPYRIGHT
- ***************/
 package com.yananas.synsound;
 
 import org.junit.Test;
