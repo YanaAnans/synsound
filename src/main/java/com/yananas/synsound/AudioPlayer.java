@@ -9,6 +9,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
+import com.yananas.synsound.model.WavData;
+
 public class AudioPlayer {
 
     private final int BUFFER_SIZE = 1280000;
@@ -20,10 +22,10 @@ public class AudioPlayer {
 
     /**
      * Play sound represented by an array of samples
-     * @param samples
-     *          an array of samples that is going to be played
+     * @param wavData
+     *          wav data encoded in some format
      * */
-    public void play(double[] samples) {
+    public void play(WavData wavData) {
         try {
             new File("tmp").mkdir();
         } catch (Exception e) {
@@ -32,7 +34,7 @@ public class AudioPlayer {
         }
         try {
             String filename = "tmp/sound.wav";
-            AudioUtils.save(filename, samples);
+            AudioUtils.save(filename, wavData);
             play(filename);
         } catch (IllegalArgumentException|IOException e) {
             e.printStackTrace();
