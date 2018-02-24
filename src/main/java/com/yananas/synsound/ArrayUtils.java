@@ -22,6 +22,13 @@ public class ArrayUtils {
         return array2;
     }
 
+    /* Задание 1 */
+    public static double[] union(double[] array1, double[] array2) {
+        double[] result = new double[array1.length + array2.length];
+        // #1 Записать в массив result сначала все элементы массива array1, а затем array2
+        return result;
+    }
+
     public static double max(double[] array) {
         double max = 0;
         for (double anArray : array) {
