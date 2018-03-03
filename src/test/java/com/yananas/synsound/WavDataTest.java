@@ -58,9 +58,9 @@ public class WavDataTest {
         WavData data = AudioLibrary.note(2, 440.1);
         data.getSampleId(-0.1);
     }
-    
+
     @Test
-    public void testInputTimeBounds() {
+    public void testSampleIdInputTimeBounds() {
         double time = 3333;
         WavData data = AudioLibrary.note(3.5, 440.1);
         double step = data.getDuration() / data.getSamples().length;

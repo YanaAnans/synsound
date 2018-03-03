@@ -20,7 +20,10 @@ public class WavData {
     }
 
     /*
-     * Retrieves sample id at a given time in milliseconds
+     * Retrieves sample id at a given time moment
+     * @param time
+     *        time moment given in milliseconds
+     * @return index of the sample at that time
      */
     public int getSampleId(double time) throws OutOfRangeException {
         if (Double.compare(time, getDuration()) > 0 || Double.compare(time, 0.0d) < 0) {
@@ -30,7 +33,10 @@ public class WavData {
     }
 
     /*
-     * Retrieves sample amplitude at a given time moment in milliseconds
+     * Retrieves sample value at a given time moment
+     * @param time
+     *        time moment given in milliseconds
+     * @return value of the sample i.e. amplitude at that time
      */
     public double getSample(double time) throws OutOfRangeException {
         return samples[getSampleId(time)];
