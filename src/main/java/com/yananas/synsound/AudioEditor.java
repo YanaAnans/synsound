@@ -7,7 +7,7 @@ import com.yananas.synsound.model.WavData;
 import com.yananas.synsound.model.WavFormat;
 
 public class AudioEditor {
-	public WavData clip(WavData wavData, double offset, double cutoff) {
+	public static WavData clip(WavData wavData, double offset, double cutoff) {
 		WavData result = new WavData();
 
 		System.out.println(wavData.getFormat().getSampleRate() + " - частота дискретизации");
