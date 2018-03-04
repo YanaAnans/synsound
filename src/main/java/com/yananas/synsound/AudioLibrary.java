@@ -1,6 +1,8 @@
 package com.yananas.synsound;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.Paths;
 
 import com.yananas.synsound.model.WavData;
 import com.yananas.synsound.model.WavFormat;
@@ -8,7 +10,7 @@ import com.yananas.synsound.model.WavFormats;
 
 public class AudioLibrary {
 
-    public static final String WAV_DIR = "voicebank";
+    public static final String WAV_DIR = "/voicebank/";
 
     public static WavData note(double duration, double frequency) {
         WavData wavData = new WavData();
@@ -26,9 +28,9 @@ public class AudioLibrary {
 
     public static WavData voice(String resourceFileName) {
         try {
-            ClassLoader classLoader = AudioLibrary.class.getClassLoader();
-            String fileName = classLoader.getResource(WAV_DIR + File.separator + resourceFileName).getFile();
-            return AudioUtils.load(fileName);
+            URL url = AudioLibrary.class.getResource(WAV_DIR + resourceFileName);
+            File file = Paths.get(url.toURI()).toFile();
+            return AudioUtils.load(file.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }
