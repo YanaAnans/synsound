@@ -11,14 +11,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import com.yananas.synsound.model.WavData;
-import com.yananas.synsound.model.WavFormat;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
 
 import static com.yananas.synsound.TransformUtils.transformBytesToDoubles;
 import static com.yananas.synsound.TransformUtils.transformDoublesToBytes;
@@ -71,32 +63,5 @@ public class AudioUtils {
         } catch (IOException e) {
             throw new IllegalArgumentException("'" + filename + "' couldn't be read", e);
         }
-    }
-
-    public static void plot(String title, WavData wavData) throws IllegalArgumentException {
-        double[] samples = wavData.getSamples();
-        if (samples == null) {
-            throw new IllegalArgumentException("'samples' is null");
-        }
-        WavFormat wavFormat = wavData.getFormat();
-        XYSeries series = new XYSeries(title);
-        for (int sampleId = 0; sampleId < samples.length; sampleId++) {
-            try {
-                series.add(sampleId / wavFormat.getSampleRate(), samples[sampleId]);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Not able to plot 'smaples' array");
-            }
-        }
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
-        JFreeChart chart = ChartFactory.createXYLineChart(title, "Time (s)", "Amplitude", dataset,
-                PlotOrientation.VERTICAL, false, false, false);
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(560, 370));
-        chartPanel.setMouseZoomable(true, false);
-        ApplicationFrame frame = new ApplicationFrame(title);
-        frame.setContentPane(chartPanel);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
