@@ -12,7 +12,7 @@ import com.yananas.synsound.model.WavFormat;
 import com.yananas.synsound.model.WavFormats;
 
 public class AudioLibrary {
-
+    public static final int CONFIG_SIZE = 7;
     public static final String WAV_DIR = "/voicebank/";
 
     public static WavData note(double duration, double frequency) {
@@ -36,7 +36,7 @@ public class AudioLibrary {
             file = Paths.get(url.toURI()).toFile();
             AudioEditorConfig result = Files.lines(file.toPath()).map((line) -> {
                 String[] parts = line.split("[=,]");
-                if (parts == null || parts.length < 2) {
+                if (parts == null || parts.length < CONFIG_SIZE) {
                     throw new IllegalArgumentException("Bad config format: " + line);
                 }
                 AudioEditorConfig config = new AudioEditorConfig();
