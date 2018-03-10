@@ -10,7 +10,6 @@ import com.yananas.synsound.model.WavData;
 public class Words {
 
     public static void main(String[] args) {
-        AudioEditor audioEditor = new AudioEditor();
         WavData wavData1 = AudioLibrary.voice("papap.wav");
         wavData1 = AudioEditor.clip(wavData1, 350, 2052);
         WavData wavData2 = AudioLibrary.voice("r_ir_ir_.wav");
@@ -25,7 +24,7 @@ public class Words {
         wavData6 = AudioEditor.clip(wavData6, 460, 1950);
         WavData wavData7 = AudioLibrary.voice("ryr_ir.wav");
         wavData7 = AudioEditor.clip(wavData7, 2490, 80);
-        WavData joinedData = audioEditor.union(Arrays.asList(wavData1, wavData2, wavData3, wavData4, wavData5, wavData6, wavData7));
+        WavData joinedData = AudioEditor.union(Arrays.asList(wavData1, wavData2, wavData3, wavData4, wavData5, wavData6, wavData7));
         AudioPlayer player = new AudioPlayer();
         player.play(joinedData);
 

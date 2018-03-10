@@ -26,7 +26,7 @@ public class AudioEditor {
 		return result;
 	}
 
-	public WavData union(List<WavData> wavDatas) throws IllegalArgumentException {
+	public static WavData union(List<WavData> wavDatas) throws IllegalArgumentException {
 		int size = 0;
 		for (int wavDataId = 0; wavDataId < wavDatas.size(); wavDataId++) {
 			size += wavDatas.get(wavDataId).getSamples().length;
