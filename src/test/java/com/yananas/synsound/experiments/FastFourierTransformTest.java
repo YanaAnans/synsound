@@ -7,7 +7,7 @@ import org.apache.commons.math3.transform.TransformType;
 import org.junit.Test;
 
 import com.yananas.synsound.ArrayUtils;
-import com.yananas.synsound.math.MathPlots;
+import com.yananas.synsound.math.MathPlot;
 import com.yananas.synsound.math.PiecewiseFunction;
 import com.yananas.synsound.math.Waveform;
 
@@ -47,23 +47,23 @@ public class FastFourierTransformTest {
                 .left(0.0).right(1.0).numberOfPieces(255).fn(wf.fn())
                 .build();
 
-        MathPlots.plot2d("waveform", "time", "amplitude", pf.getXValues(), pf.getYValues());
+        MathPlot.plot("waveform", "time", "amplitude", pf.getXValues(), pf.getYValues());
 
         FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
 
         Complex[] result = transformer.transform(pf.getYValues(), TransformType.FORWARD);
 
         double[] absValues = ArrayUtils.fromComplexAbs(result);
-        MathPlots.plot2d("Absolute values", absValues);
+        MathPlot.plot("Absolute values", absValues);
 
         double[] imaginaryParts = ArrayUtils.fromComplexImaginaryParts(result);
-        MathPlots.plot2d("Imaginary parts", imaginaryParts);
+        MathPlot.plot("Imaginary parts", imaginaryParts);
 
         double[] realParts = ArrayUtils.fromComplexRealParts(result);
-        MathPlots.plot2d("Real parts", realParts);
+        MathPlot.plot("Real parts", realParts);
 
         double[] angles = ArrayUtils.fromComplexArgs(result);
-        MathPlots.plot2d("Angles", angles);
+        MathPlot.plot("Angles", angles);
     }
 
 }
