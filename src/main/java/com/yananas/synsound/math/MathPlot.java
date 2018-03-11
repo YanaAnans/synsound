@@ -44,7 +44,7 @@ public class MathPlot {
     }
 
     public static void plot(String title, double[] yVals) {
-        double[] xVals = IntStream.range(0, yVals.length).mapToDouble(id -> id / yVals.length).toArray();
+        double[] xVals = IntStream.range(0, yVals.length).mapToDouble(id -> id / (double) yVals.length).toArray();
         plot(title, LABEL_MISSING, LABEL_MISSING, xVals, yVals);
     }
 
