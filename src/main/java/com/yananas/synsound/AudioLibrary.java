@@ -6,6 +6,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.yananas.synsound.model.WavData;
 import com.yananas.synsound.model.WavFormat;
@@ -78,11 +80,18 @@ public class AudioLibrary {
         }
         return new WavData();
     }
+    
+    public static List<WavData> phonems(String phonemsSequence) {
+    	String[] phonems = phonemsSequence.split(" ");
+    	// 1. create new list containing wav data
+    	// 2. foreach phonem string use phoneme method which return Wav data; put wav data into list
+    	// 3. retrieve list
+    	return new ArrayList<WavData>();
+    }
 
     public static void main(String[] args) {
         AudioPlayer player = new AudioPlayer();
         player.play(phoneme("a"));
         player.play(note(2.0, 440.0));
-        player.play(voice("a.wav"));
     }
 }
