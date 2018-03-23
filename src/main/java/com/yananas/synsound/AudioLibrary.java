@@ -6,13 +6,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.yananas.synsound.model.WavData;
 import com.yananas.synsound.model.WavFormat;
 import com.yananas.synsound.model.WavFormats;
 
 public class AudioLibrary {
-
+    public static final int CONFIG_SIZE = 7;
     public static final String WAV_DIR = "/voicebank/";
 
     public static WavData note(double duration, double frequency) {
@@ -36,7 +38,7 @@ public class AudioLibrary {
             file = Paths.get(url.toURI()).toFile();
             AudioEditorConfig result = Files.lines(file.toPath()).map((line) -> {
                 String[] parts = line.split("[=,]");
-                if (parts == null || parts.length < 2) {
+                if (parts == null || parts.length < CONFIG_SIZE) {
                     throw new IllegalArgumentException("Bad config format: " + line);
                 }
                 AudioEditorConfig config = new AudioEditorConfig();
@@ -47,8 +49,7 @@ public class AudioLibrary {
                 return config;
             }).filter((config) -> {
                 return config.getAlias().equals(alias);
-            }).findAny().orElseThrow(
-                    () -> new IllegalArgumentException("Not able to find foname with name: " + alias));
+            }).findAny().orElseThrow(() -> new IllegalArgumentException("Not able to find foname with name: " + alias));
             return result;
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -60,7 +61,7 @@ public class AudioLibrary {
         WavData wavData = new WavData();
         try {
             AudioEditorConfig config = loadConfig(alias);
-            wavData =  voice(config.getFileName());
+            wavData = voice(config.getFileName());
             return AudioEditor.clip(wavData, config.getOffset(), config.getCutoff());
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,11 +79,32 @@ public class AudioLibrary {
         }
         return new WavData();
     }
+    
+    public static List<WavData> phonems(String phonemsSequence) {
+    	String[] phonems = phonemsSequence.split(" ");
+    	// 1. create new list containing wav data
+    	// 2. foreach phonem string use phoneme method which return Wav data; put wav data into list
+    	// 3. retrieve list
+    	return new ArrayList<WavData>();
+    }
+
+    public static List<WavData> phonemes(String phonemesSequence) {
+        String[] text = phonemesSequence.split(" ");
+        ArrayList<WavData> list = new ArrayList<WavData>();
+        for (int i = 0; i < text.length; i++) {
+            list.add(AudioLibrary.phoneme(text[i]));
+        }
+        return list;
+    }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
+        AudioPlayer.play(phoneme("a"));
+        AudioPlayer.play(note(2.0, 440.0));
+=======
         AudioPlayer player = new AudioPlayer();
         player.play(phoneme("a"));
         player.play(note(2.0, 440.0));
-        player.play(voice("a.wav"));
+>>>>>>> 48f6d3a67cc5cc125ec8508ea47c0ba749e13954
     }
 }

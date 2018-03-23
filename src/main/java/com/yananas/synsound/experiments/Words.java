@@ -24,9 +24,9 @@ public class Words {
         wavData6 = AudioEditor.clip(wavData6, 460, 1950);
         WavData wavData7 = AudioLibrary.voice("ryr_ir.wav");
         wavData7 = AudioEditor.clip(wavData7, 2490, 80);
-        WavData joinedData = AudioEditor.union(Arrays.asList(wavData1, wavData2, wavData3, wavData4, wavData5, wavData6, wavData7));
-        AudioPlayer player = new AudioPlayer();
-        player.play(joinedData);
+        WavData joinedData = AudioEditor
+                .union(Arrays.asList(wavData1, wavData2, wavData3, wavData4, wavData5, wavData6, wavData7));
+        AudioPlayer.play(joinedData);
 
     }
 

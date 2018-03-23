@@ -52,26 +52,18 @@ public class ArrayUtils {
     }
 
     public static double[] fromComplexAbs(Complex[] complexValues) {
-        return Arrays.stream(complexValues).mapToDouble(value ->
-            value.abs()
-        ).toArray();
+        return Arrays.stream(complexValues).mapToDouble(value -> value.abs()).toArray();
     }
 
     public static double[] fromComplexRealParts(Complex[] complexValues) {
-        return Arrays.stream(complexValues).mapToDouble(value ->
-            value.getReal()
-        ).toArray();
+        return Arrays.stream(complexValues).mapToDouble(value -> value.getReal()).toArray();
     }
 
     public static double[] fromComplexImaginaryParts(Complex[] complexValues) {
-        return Arrays.stream(complexValues).mapToDouble(value ->
-            value.getImaginary()
-        ).toArray();
+        return Arrays.stream(complexValues).mapToDouble(value -> value.getImaginary()).toArray();
     }
 
     public static double[] fromComplexArgs(Complex[] complexValues) {
-        return Arrays.stream(complexValues).mapToDouble(value ->
-            value.getArgument()
-        ).toArray();
+        return Arrays.stream(complexValues).mapToDouble(value -> value.getArgument()).toArray();
     }
 }

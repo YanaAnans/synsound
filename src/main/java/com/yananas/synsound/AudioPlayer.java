@@ -13,19 +13,20 @@ import com.yananas.synsound.model.WavData;
 
 public class AudioPlayer {
 
-    private final int BUFFER_SIZE = 1280000;
+    private final static int BUFFER_SIZE = 1280000;
 
-    private File soundFile;
-    private AudioInputStream audioStream;
-    private AudioFormat audioFormat;
-    private SourceDataLine sourceLine;
+    private static File soundFile;
+    private static AudioInputStream audioStream;
+    private static AudioFormat audioFormat;
+    private static SourceDataLine sourceLine;
 
     /**
      * Play sound represented by an array of samples
+     * 
      * @param wavData
-     *          wav data encoded in some format
-     * */
-    public void play(WavData wavData) {
+     *            wav data encoded in some format
+     */
+    public static void play(WavData wavData) {
         try {
             new File("tmp").mkdir();
         } catch (Exception e) {
@@ -35,18 +36,19 @@ public class AudioPlayer {
         try {
             String filename = "tmp/sound.wav";
             AudioUtils.save(filename, wavData);
-            play(filename);
-        } catch (IllegalArgumentException|IOException e) {
+            AudioPlayer.play(filename);
+        } catch (IllegalArgumentException | IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Play sound file given by its filename
+     * 
      * @param filename
      *            the name of the file that is going to be played
      */
-    public void play(String filename) {
+    public static void play(String filename) {
         try {
             soundFile = new File(filename);
             audioStream = AudioSystem.getAudioInputStream(soundFile);
