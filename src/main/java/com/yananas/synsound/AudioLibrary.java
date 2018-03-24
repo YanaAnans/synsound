@@ -79,14 +79,6 @@ public class AudioLibrary {
         }
         return new WavData();
     }
-    
-    public static List<WavData> phonems(String phonemsSequence) {
-    	String[] phonems = phonemsSequence.split(" ");
-    	// 1. create new list containing wav data
-    	// 2. foreach phonem string use phoneme method which return Wav data; put wav data into list
-    	// 3. retrieve list
-    	return new ArrayList<WavData>();
-    }
 
     public static List<WavData> phonemes(String phonemesSequence) {
         String[] text = phonemesSequence.split(" ");
@@ -98,13 +90,7 @@ public class AudioLibrary {
     }
 
     public static void main(String[] args) {
-<<<<<<< HEAD
         AudioPlayer.play(phoneme("a"));
         AudioPlayer.play(note(2.0, 440.0));
-=======
-        AudioPlayer player = new AudioPlayer();
-        player.play(phoneme("a"));
-        player.play(note(2.0, 440.0));
->>>>>>> 48f6d3a67cc5cc125ec8508ea47c0ba749e13954
     }
 }

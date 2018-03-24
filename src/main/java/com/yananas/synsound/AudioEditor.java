@@ -51,19 +51,10 @@ public class AudioEditor {
     }
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-=======
-        AudioPlayer player = new AudioPlayer();
->>>>>>> 48f6d3a67cc5cc125ec8508ea47c0ba749e13954
         WavData wavData1 = AudioLibrary.note(1, 440.1);
         WavData wavData2 = AudioLibrary.note(1, 660.1);
         WavData wavData3 = AudioLibrary.note(1, 880.1);
         WavData joinedData = AudioEditor.union(Arrays.asList(wavData1, wavData2, wavData3));
-<<<<<<< HEAD
         AudioPlayer.play(joinedData);
-=======
-        player.play(joinedData);
-        player.play(AudioEditor.clip(joinedData, 1000, 1000));
->>>>>>> 48f6d3a67cc5cc125ec8508ea47c0ba749e13954
     }
 }
