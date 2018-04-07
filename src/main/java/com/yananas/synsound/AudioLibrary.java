@@ -14,83 +14,105 @@ import com.yananas.synsound.model.WavFormat;
 import com.yananas.synsound.model.WavFormats;
 
 public class AudioLibrary {
-    public static final int CONFIG_SIZE = 7;
-    public static final String WAV_DIR = "/voicebank/";
+	public static final int CONFIG_SIZE = 7;
+	public static final String WAV_DIR = "/voicebank/";
 
-    public static WavData note(double duration, double frequency) {
-        WavData wavData = new WavData();
-        WavFormat wavFormat = WavFormats.defaultFormat();
-        wavData.setFormat(wavFormat);
-        double amplitude = 0.8;
-        double[] samples = new double[(int) (duration * wavFormat.getSampleRate())];
-        for (int sampleId = 0; sampleId < samples.length; sampleId++) {
-            double time = sampleId / wavFormat.getSampleRate();
-            samples[sampleId] = amplitude * Math.sin(2 * Math.PI * frequency * time);
-        }
-        wavData.setSamples(samples);
-        return wavData;
-    }
+	public static WavData note(double duration, double frequency) {
+		WavData wavData = new WavData();
+		WavFormat wavFormat = WavFormats.defaultFormat();
+		wavData.setFormat(wavFormat);
+		double amplitude = 0.8;
+		double[] samples = new double[(int) (duration * wavFormat.getSampleRate())];
+		for (int sampleId = 0; sampleId < samples.length; sampleId++) {
+			double time = sampleId / wavFormat.getSampleRate();
+			samples[sampleId] = amplitude * Math.sin(2 * Math.PI * frequency * time);
+		}
+		wavData.setSamples(samples);
+		return wavData;
+	}
 
-    private static AudioEditorConfig loadConfig(String alias) throws IllegalArgumentException, IOException {
-        URL url = AudioLibrary.class.getResource("/settings.ini");
-        File file;
-        try {
-            file = Paths.get(url.toURI()).toFile();
-            AudioEditorConfig result = Files.lines(file.toPath()).map((line) -> {
-                String[] parts = line.split("[=,]");
-                if (parts == null || parts.length < CONFIG_SIZE) {
-                    throw new IllegalArgumentException("Bad config format: " + line);
-                }
-                AudioEditorConfig config = new AudioEditorConfig();
-                config.setFileName(parts[0]);
-                config.setAlias(parts[1]);
-                config.setOffset(Integer.parseInt(parts[2]));
-                config.setCutoff(Integer.parseInt(parts[4]));
-                return config;
-            }).filter((config) -> {
-                return config.getAlias().equals(alias);
-            }).findAny().orElseThrow(() -> new IllegalArgumentException("Not able to find foname with name: " + alias));
-            return result;
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-            throw new IOException("Not able to read from 'settings.ini' file", e);
-        }
-    }
+	private static AudioEditorConfig loadConfig(String alias) throws IllegalArgumentException, IOException {
+		URL url = AudioLibrary.class.getResource("/settings.ini");
+		File file;
+		try {
+			file = Paths.get(url.toURI()).toFile();
+			AudioEditorConfig result = Files.lines(file.toPath()).map((line) -> {
+				String[] parts = line.split("[=,]");
+				if (parts == null || parts.length < CONFIG_SIZE) {
+					throw new IllegalArgumentException("Bad config format: " + line);
+				}
+				AudioEditorConfig config = new AudioEditorConfig();
+				config.setFileName(parts[0]);
+				config.setAlias(parts[1]);
+				config.setOffset(Integer.parseInt(parts[2]));
+				config.setConsonant(Integer.parseInt(parts[3]));
+				config.setCutoff(Integer.parseInt(parts[4]));
+				config.setOverlap(Integer.parseInt(parts[5]));
+				return config;
+			}).filter((config) -> {
+				return config.getAlias().equals(alias);
+			}).findAny().orElseThrow(() -> new IllegalArgumentException("Not able to find foname with name: " + alias));
+			return result;
+		} catch (IOException | URISyntaxException e) {
+			e.printStackTrace();
+			throw new IOException("Not able to read from 'settings.ini' file", e);
+		}
+	}
 
-    public static WavData phoneme(String alias) {
-        WavData wavData = new WavData();
-        try {
-            AudioEditorConfig config = loadConfig(alias);
-            wavData = voice(config.getFileName());
-            return AudioEditor.clip(wavData, config.getOffset(), config.getCutoff());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return wavData;
-    }
+	public static WavData phoneme(String alias) {
+		WavData wavData = new WavData();
+		try {
+			AudioEditorConfig config = loadConfig(alias);
+			wavData = voice(config.getFileName());
+			return AudioEditor.clip(wavData, config.getOffset(), config.getCutoff());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return wavData;
+	}
 
-    public static WavData voice(String resourceFileName) {
-        try {
-            URL url = AudioLibrary.class.getResource(WAV_DIR + resourceFileName);
-            File file = Paths.get(url.toURI()).toFile();
-            return AudioUtils.load(file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new WavData();
-    }
+	public static WavData vowel(String alias) {
+		WavData wavData = new WavData();
+		try {
+			AudioEditorConfig config = loadConfig(alias);
+			wavData = voice(config.getFileName());
+			double vowel = 100;
+			double cutVowel = wavData.getDuration() - config.getOffset() - config.getConsonant() - vowel
+					- config.getCutoff();
+			return AudioEditor.clip(wavData, config.getOffset(), config.getCutoff() + cutVowel);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return wavData;
+	}
 
-    public static List<WavData> phonemes(String phonemesSequence) {
-        String[] text = phonemesSequence.split(" ");
-        ArrayList<WavData> list = new ArrayList<WavData>();
-        for (int i = 0; i < text.length; i++) {
-            list.add(AudioLibrary.phoneme(text[i]));
-        }
-        return list;
-    }
+	public static WavData voice(String resourceFileName) {
+		try {
+			URL url = AudioLibrary.class.getResource(WAV_DIR + resourceFileName);
+			File file = Paths.get(url.toURI()).toFile();
+			return AudioUtils.load(file.getAbsolutePath());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new WavData();
+	}
 
-    public static void main(String[] args) {
-        AudioPlayer.play(phoneme("a"));
-        AudioPlayer.play(note(2.0, 440.0));
-    }
+	public static List<WavData> phonemes(String phonemesSequence) {
+		String[] text = phonemesSequence.split(" ");
+		ArrayList<WavData> list = new ArrayList<WavData>();
+		for (int i = 0; i < text.length; i++) {
+			if (text[i].endsWith("a") || text[i].endsWith("i") || text[i].endsWith("u") || text[i].endsWith("e")
+					|| text[i].endsWith("o") || text[i].endsWith("y")) {
+				list.add(AudioLibrary.vowel(text[i]));
+			} else {
+				list.add(AudioLibrary.phoneme(text[i]));
+			}
+		}
+		return list;
+	}
+
+	public static void main(String[] args) {
+		AudioPlayer.play(phoneme("a"));
+		AudioPlayer.play(note(2.0, 440.0));
+	}
 }

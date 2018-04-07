@@ -8,4 +8,6 @@ public class AudioEditorConfig {
     private String fileName;
     private int offset;
     private int cutoff;
+    private int consonant;
+    private int overlap;
 }
