@@ -16,7 +16,7 @@ public class TextTransformer {
         latinMap.put("ё", "~o");
         latinMap.put("ж", "j");
         latinMap.put("з", "z");
-        latinMap.put("и", "'i");
+        latinMap.put("и", "i");
         latinMap.put("й", "~");
         latinMap.put("к", "k");
         latinMap.put("л", "l");
