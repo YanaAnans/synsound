@@ -12,8 +12,8 @@ public class TextTransformer {
 		latinMap.put("в", "v");
 		latinMap.put("г", "g");
 		latinMap.put("д", "d");
-		latinMap.put("'е", "'e");
-		latinMap.put("'ё", "'o");
+		latinMap.put("е", "e");
+		latinMap.put("ё", "o");
 		latinMap.put("ж", "j");
 		latinMap.put("з", "z");
 		latinMap.put("и", "i");
@@ -31,13 +31,13 @@ public class TextTransformer {
 		latinMap.put("ф", "f");
 		latinMap.put("х", "h");
 		latinMap.put("ц", "c");
-		latinMap.put("ч", "4'");
+		latinMap.put("ч", "4");
 		latinMap.put("ш", "w");
 		latinMap.put("щ", "w");
 		latinMap.put("ы", "y");
 		latinMap.put("э", "e");
-		latinMap.put("'ю", "'u");
-		latinMap.put("'я", "'a");
+		latinMap.put("ю", "u");
+		latinMap.put("я", "a");
 	}
 
 	public String transform(String text) {
