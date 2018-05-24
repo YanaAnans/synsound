@@ -71,12 +71,11 @@ public class AudioLibrary {
 		return wavData;
 	}
 
-	public static WavData vowel(String alias) {
+	public static WavData vowel(String alias, double vowel) {
 		WavData wavData = new WavData();
 		try {
 			AudioEditorConfig config = loadConfig(alias);
 			wavData = voice(config.getFileName());
-			double vowel = 100;
 			double cutVowel = wavData.getDuration() - config.getOffset() - config.getConsonant() - vowel
 					- config.getCutoff();
 			return AudioEditor.clip(wavData, config.getOffset(), config.getCutoff() + cutVowel);
@@ -97,13 +96,13 @@ public class AudioLibrary {
 		return new WavData();
 	}
 
-	public static List<WavData> phonemes(String phonemesSequence) {
+	public static List<WavData> phonemes(String phonemesSequence, double vowel) {
 		String[] text = phonemesSequence.split(" ");
 		ArrayList<WavData> list = new ArrayList<WavData>();
 		for (int i = 0; i < text.length; i++) {
 			if (text[i].endsWith("a") || text[i].endsWith("i") || text[i].endsWith("u") || text[i].endsWith("e")
 					|| text[i].endsWith("o") || text[i].endsWith("y")) {
-				list.add(AudioLibrary.vowel(text[i]));
+				list.add(AudioLibrary.vowel(text[i], vowel));
 			} else {
 				list.add(AudioLibrary.phoneme(text[i]));
 			}
