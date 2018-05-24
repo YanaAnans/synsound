@@ -49,6 +49,8 @@ public class Hyphenator {
         text = text.toLowerCase();
         text = text.replaceAll("[.,!?;:]", "");
         text = text.replaceAll(("(.)([ ])([" + consonants + "])([ ])(.)"), "$1$3$5");
+        text = text.replace("ться", "ца");
+        text = text.replace("тся", "ца");
         text = text.replaceAll(("([" + consonants + "])([ ])([" + consonants + "])([" + allVowels + "] || ([" + consonants + "]))"), "$1- -$3$4");
         text = text.replaceAll(("([" + consonants + "])([ ])([и])([ ])([" + consonants + "])"), "$1ы$5");
         text = text.replaceAll(("([" + consonants + "])([ ])([" + vowels + "])"), "$1$3");
@@ -92,6 +94,6 @@ public class Hyphenator {
         TextTransformer toLatin = new TextTransformer();
         System.out.println(toLatin.transform(textToSamples("привет мир")));
         System.out.println(toLatin.transform(textToSamples("жирный жир")));
-        System.out.println(toLatin.transform(textToSamples("подъезд")));
+        System.out.println(toLatin.transform(textToSamples("менятся")));
     }
 }
