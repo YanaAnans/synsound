@@ -5,8 +5,7 @@ import java.util.regex.Pattern;
 
 public class Hyphenator {
 
-    private final static String allVowels = "аиуэоыяюеё";
-    private final static String vowels = "аиуэоы";
+    private final static String vowels = "аиуэоыяюеё";
     private final static String ioVowels = "яюеё";
     private final static String consonants = "бвгджзклмнпрстфхцчшщй";
 
@@ -44,27 +43,30 @@ public class Hyphenator {
         text = text.replaceAll("8", "восемь");
         text = text.replaceAll("9", "девять");
         Pattern p1 = Pattern.compile("([" + consonants + "])([" + consonants + "])");
-        Pattern p2 = Pattern.compile("([" + allVowels + "])([" + consonants + "])([" + allVowels + "])");
-        Pattern p3 = Pattern.compile("([" + consonants + "])([" + allVowels + "])([" + consonants + "])");
+        Pattern p2 = Pattern.compile("([" + vowels + "])([" + consonants + "])([" + vowels + "])");
+        Pattern p3 = Pattern.compile("([" + consonants + "])([" + vowels + "])([" + consonants + "])");
         text = text.toLowerCase();
         text = text.replaceAll("[.,!?;:]", "");
         text = text.replaceAll(("(.)([ ])([" + consonants + "])([ ])(.)"), "$1$3$5");
         text = text.replace("ться", "ца");
         text = text.replace("тся", "ца");
-        text = text.replaceAll(("([" + consonants + "])([ ])([" + consonants + "])([" + allVowels + "] || ([" + consonants + "]))"), "$1- -$3$4");
+        text = text.replaceAll(("([" + consonants + "])([о])([г])([о])"), "$1ава");
+        text = text.replaceAll(("([" + consonants + "])([ ])([" + consonants + "])([" + vowels + "] || ([" + consonants + "]))"), "$1- -$3$4");
         text = text.replaceAll(("([" + consonants + "])([ ])([и])([ ])([" + consonants + "])"), "$1ы$5");
-        text = text.replaceAll(("([" + consonants + "])([ ])([" + vowels + "])"), "$1$3");
+        text = text.replaceAll(("([" + consonants + "])([ ])([аиуэоы])"), "$1$3");
+        text = text.replaceAll(("([" + consonants + "])([ь])([ ])([аиуэоы])([ ])"), "$1' $1'$4 $4");
+        text = text.replaceAll(("([" + consonants + "])([ь])([ ])([аиуэоы])"), "$1' $1'$4 $4");
         text = text.replaceAll(("([" + vowels + "])([ ])([" + consonants + "])"), "$1$3");
-        text = text.replaceAll(("(.*)([ ])([" + ioVowels + "])($)"), "$1$3");
+        text = text.replaceAll(("([ ])([" + ioVowels + "])"), "$1-~$2 $2");
         text = text.replaceAll(("([" + consonants + "])([ ])([" + ioVowels + "])"), "$1- -й$3");
         text = text.replaceAll(("(^)([" + ioVowels + "])"), "-й$2");
-        text = text.replaceAll(("([" + allVowels +"])([" + ioVowels + "])"), "$1й$2");
+        text = text.replaceAll(("([" + vowels +"])([" + ioVowels + "])"), "$1й$2");
         text = text.replaceAll(("([ъ])([" + ioVowels + "])"), "й$2");
         text = text.replaceAll("([ж])([и])", "$1ы");
         text = text.replaceAll("([ш])([и])", "$1ы");
         text = text.replaceAll("([ц])([и])", "$1ы");
-        text = text.replaceAll(("([" + allVowels + "])([" + consonants + "])($)"), "$1$2-");
-        text = text.replaceAll("([" + allVowels + "])([" + allVowels + "])", "$1 $2");
+        text = text.replaceAll(("([" + vowels + "])([" + consonants + "])($)"), "$1$2-");
+        text = text.replaceAll("([" + vowels + "])([" + vowels + "])", "$1 $2");
         text = text.replaceAll(p1.toString(), "$1 $2");
         text = text.replaceAll(p2.toString(), "$1$2 $2$3");
         text = text.replaceAll(p1.toString(), "$1 $2");
@@ -72,28 +74,33 @@ public class Hyphenator {
         text = text.replaceAll(p2.toString(), "$1$2 $2$3");
         text = text.replaceAll(p3.toString(), "$1$2 $2$3");
         text = text.replaceAll(("([" + consonants + "])([и])"), "$1'$2");
-        text = text.replaceAll("([" + allVowels + "])([" + allVowels + "])", "$1 $2");
-        text = text.replaceAll("([щ])(.*)", "$1'$2");
+        text = text.replaceAll("([" + vowels + "])([" + vowels + "])", "$1 $2");
+        text = text.replaceAll("([щ])([ауэояюеё])", "$1'$2");
         text = text.replaceAll("([ч])([" + consonants + "])", "4' $2");
         text = text.replaceAll("([" + consonants + "])([" + ioVowels + "и" + "])", "$1'$2");
-        text = text.replaceAll("([" + allVowels + "])([" + consonants + "])([ ])([" + consonants + "])(['])(["
+        text = text.replaceAll("([" + vowels + "])([" + consonants + "])([ ])([" + consonants + "])(['])(["
                 + ioVowels + "[и]" + "])", "$1$2'$3$4$5$6");
         text = text.replaceAll("([ч])([ ])", "$1' ");
         text = text.replaceAll("([ч])($)", "$1'-");
-        text = text.replaceAll("([" + consonants + "])([ь])([" + allVowels + "])", "$1' $1'$3 $3");
+        text = text.replaceAll("([" + consonants + "])([ь])([" + consonants + "])", "$1' $3");
+        text = text.replaceAll("([ь])([ ])([" + consonants + "])", "$1 -$3");
+        text = text.replaceAll("([" + consonants + "])([ь])([" + ioVowels + "])", "$1' ~$3");
         text = text.replaceAll("([" + consonants + "])([ь])", "$1'- ");
         text = text.replaceAll("([й])(['])", "$1");
         text = text.replaceAll(("(.*)([" + consonants + "])($)"), "$1$2-");
         text = text.replaceAll(("(^)([" + consonants + "])(.*)"), "-$2$3");
         text = text.replaceAll(("([ж])(['])"), "$1");
+        text = text.replaceAll(("([ш])(['])"), "$1");
+        text = text.replaceAll(("([ц])(['])"), "$1");
+        text = text.replaceAll(("([ ])([ ])"), "$1");
 
         return text;
     }
 
     public static void main(String[] args) {
         TextTransformer toLatin = new TextTransformer();
-        System.out.println(toLatin.transform(textToSamples("привет мир")));
-        System.out.println(toLatin.transform(textToSamples("жирный жир")));
-        System.out.println(toLatin.transform(textToSamples("менятся")));
+        System.out.println(toLatin.transform(textToSamples("20 и 5")));
+        System.out.println(toLatin.transform(textToSamples("восемьсот")));
+        System.out.println(toLatin.transform(textToSamples("меняться")));
     }
 }
